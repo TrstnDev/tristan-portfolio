@@ -1,0 +1,91 @@
+---
+import "@fontsource/instrument-serif/400.css";
+import "@fontsource/instrument-serif/400-italic.css";
+import "@fontsource/ibm-plex-mono/400.css";
+import "../styles/global.css";
+
+import { profile } from "../data/portfolio";
+import { undefined } from "astro:schema";
+
+interface Props {
+    title: string;
+    description?: string;
+}
+
+const {
+    title,
+    description = profile.introduction,
+} = Astro.props;
+
+const canonical = Astro.site
+    ? new URL(Astro.url.pathname, Astro.site)
+    : undefined;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="description" content={description} />
+        <meta name="theme-color" content="#E9E5DA" />
+
+        <title>{title} | {profile.name}</title>
+
+        <meta property="og:title" content={`${title} | ${profile.name}`} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+
+        {canonical && <link rel="canonical" href={canonical} />}
+    </head>
+
+    <body>
+        <a class="skip-link" href="#main">Skip to content</a>
+
+        <header class="site-header shell">
+            <a class="brand" href="/" aria-label={`${profile.name} home`}>
+            TK<span aria-hidden="true">↗</span>
+            </a>
+
+            <nav aria-label="Main navigation">
+                <a href="/#work">Work</a>
+                <a href="/#about">About</a>
+                <a href="/#contact">Contact</a>
+                {profile.cv && <a href={profile.cv}>CV</a>}
+            </nav>
+        </header>
+
+        <slot />
+
+        <footer id="contact" class="site-footer shell">
+            <p class="eyebrow">Contact / {profile.location}</p>
+            <h2>Have a project in mind?</h2>
+            <p>Available for agreed project and part-time work around my studies.</p>
+
+            <div class="link-row">
+                {profile.email && (
+                    <a href={`mailto:${profile.email}`}>Email ↗</a>
+                )}
+                {profile.github && (
+                    <a href={profile.github}>GitHub ↗</a>
+                )}
+                {profile.linkedin && (
+                    <a href={profile.linkedin}>LinkedIn ↗</a>
+                )}
+                {profile.cv && (
+                    <a href={profile.cv} download>Download CV ↓</a>
+                )}
+            </div>
+
+            {!profile.email && !profile.linkedin && (
+                <p class="small">Contact details coming soon.</p>
+            )}
+
+            <p class="small">© {new Date().getFullYear()} {profile.name}</p>
+        </footer>
+
+        <script>
+            import "../scripts/motion";
+        </script>
+    </body>
+</html>
