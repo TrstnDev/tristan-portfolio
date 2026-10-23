@@ -39,7 +39,7 @@ export type Project = {
         alt: string;
     };
     repository?: string;
-    demo?: string:
+    demo?: string;
 };
 
 export const projects: Project[] = [
